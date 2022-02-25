@@ -6,9 +6,9 @@ import tornado.gen
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-from pysyncobj import SyncObjConsumer, replicated
 from pysyncobj.batteries import ReplList
 from tornado.routing import Router
+import mimetypes
 
 from pushpy.batteries import ReplEventDict, ReplVersionedDict, ReplTaskManager
 from pushpy.code_store import load_src, CodeStoreLoader
@@ -24,23 +24,9 @@ class Handle404(tornado.web.RequestHandler):
 
 class GetResource(tornado.web.RequestHandler):
     def get(self, path, data):
-        if path.endswith(".svg"):
-            header = "Content-Type"
-            body = "image/svg+xml"
-            self.set_header(header, body)
-        elif path.endswith(".json"):
-            header = "Content-Type"
-            body = "application/json"
-            self.set_header(header, body)
-        elif path.endswith(".js"):
-            header = "Content-Type"
-            body = "text/javascript"
-            self.set_header(header, body)
-        elif path.endswith(".html"):
-            header = "Content-Type"
-            body = "text/html"
-            self.set_header(header, body)
-
+        mt = mimetypes.guess_type(path)[0]
+        if mt is not None:
+            self.set_header("Content-Type", mt)
         self.finish(data)
 
 
