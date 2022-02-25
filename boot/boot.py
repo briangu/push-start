@@ -22,6 +22,28 @@ class Handle404(tornado.web.RequestHandler):
         self.write('404 Not Found')
 
 
+class GetResource(tornado.web.RequestHandler):
+    def get(self, path, data):
+        if path.endswith(".svg"):
+            header = "Content-Type"
+            body = "image/svg+xml"
+            self.set_header(header, body)
+        elif path.endswith(".json"):
+            header = "Content-Type"
+            body = "application/json"
+            self.set_header(header, body)
+        elif path.endswith(".js"):
+            header = "Content-Type"
+            body = "text/javascript"
+            self.set_header(header, body)
+        elif path.endswith(".html"):
+            header = "Content-Type"
+            body = "text/html"
+            self.set_header(header, body)
+
+        self.finish(data)
+
+
 # https://stackoverflow.com/questions/47970574/tornado-routing-to-a-base-handler
 class MyRouter(Router):
     def __init__(self, store, app, prefix=None):
@@ -31,16 +53,20 @@ class MyRouter(Router):
 
     def find_handler(self, request, **kwargs):
         host = request.headers.get("Host")
-
+        p = f"{self.prefix}/{host}{request.path}"
+        args = [] 
         try:
-            handler = load_src(self.store, f"{self.prefix}/{host}{request.path}") or Handle404
+            handler = load_src(self.store, p) or Handle404
+            if isinstance(handler, bytes):
+                args = [p, handler]
+                handler = GetResource 
         except Exception as e:
             import traceback
             traceback.print_exc()
             print(e)
             handler = Handle404
 
-        return self.app.get_handler_delegate(request, handler)
+        return self.app.get_handler_delegate(request, handler, path_args=args)
 
 
 def make_app(kvstore):

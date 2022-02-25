@@ -1,4 +1,5 @@
 .idea
+client/web/**
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
