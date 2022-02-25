@@ -21,9 +21,13 @@ def list_files(startpath):
             k = f"/{k}"
             with open(p, "rb") as f:
                 d = f.read()
+                print(type(d))
 #                print(type(dill.loads(dill.dumps(d))))
                 print(f"{len(d)}\t{k}")
-                wd[k] = dill.dumps(d)
+                #wd[k] = dill.dumps(d)
+                if isinstance(d, str):
+                    d = d.encode('utf-8')
+                repl_code_store.set(k, dill.dumps(d), sync=True)
     return wd
 
 
@@ -31,5 +35,5 @@ start_dir = sys.argv[1] if len(sys.argv) > 1 else "web"
 
 web_dict = list_files('web')
 print(list(web_dict.keys()))
+#repl_code_store.update(web_dict, sync=True)
 
-repl_code_store.update(web_dict, sync=True)

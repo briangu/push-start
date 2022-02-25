@@ -1,5 +1,6 @@
 import importlib
 import sys
+import os
 import typing
 
 import tornado.gen
@@ -24,7 +25,8 @@ class Handle404(tornado.web.RequestHandler):
 
 class GetResource(tornado.web.RequestHandler):
     def get(self, path, data):
-        mt = mimetypes.guess_type(path)[0]
+        bn = os.path.basename(path)
+        mt = mimetypes.guess_type(bn)[0]
         if mt is not None:
             self.set_header("Content-Type", mt)
         self.finish(data)
