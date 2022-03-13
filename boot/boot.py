@@ -18,18 +18,26 @@ from pushpy.task_manager import TaskManager
 
 
 class Handle404(tornado.web.RequestHandler):
-    def get(self):
+    def get(self, *args, **kwargs):
         self.set_status(404)
         self.write('404 Not Found')
 
 
 class GetResource(tornado.web.RequestHandler):
-    def get(self, path, data):
+#    def __init__(self, *args, data=None):
+#        self.data = data
+
+    def initialize(self, data):
+        self.data = data
+
+    def get(self, path, **kwargs):
+        print(f"get: {path}")
         bn = os.path.basename(path)
         mt = mimetypes.guess_type(bn)[0]
+        print(f"basename: {bn} mt: {mt}")
         if mt is not None:
             self.set_header("Content-Type", mt)
-        self.finish(data)
+        self.write(self.data)
 
 
 # https://stackoverflow.com/questions/47970574/tornado-routing-to-a-base-handler
@@ -42,11 +50,12 @@ class MyRouter(Router):
     def find_handler(self, request, **kwargs):
         host = request.headers.get("Host")
         p = f"{self.prefix}/{host}{request.path}"
-        args = [] 
+        target_kwargs = {} 
         try:
             handler = load_src(self.store, p) or Handle404
-            if isinstance(handler, bytes):
-                args = [p, handler]
+            is_bytes = isinstance(handler, bytes)
+            if is_bytes: 
+                target_kwargs = {'data': handler} 
                 handler = GetResource 
         except Exception as e:
             import traceback
@@ -54,7 +63,7 @@ class MyRouter(Router):
             print(e)
             handler = Handle404
 
-        return self.app.get_handler_delegate(request, handler, path_args=args)
+        return self.app.get_handler_delegate(request, handler, target_kwargs=target_kwargs, path_args=[p])
 
 
 def make_app(kvstore):
