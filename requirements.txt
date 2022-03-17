@@ -1,5 +1,2 @@
-pushpy~=0.1.6
-dill~=0.3.4
-requests~=2.26.0
-tornado~=6.1
+pushpy~=0.1.9
 python-daemon

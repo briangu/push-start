@@ -1,0 +1,19 @@
+version: '3.4'
+services:
+  push-tf-secondary-2:
+    container_name: "push-tf-secondary-2"
+    hostname: "push-tf-secondary-2"
+    tty: true
+    image: eismcc/push-${PUSH_DEPLOY_TYPE}-tensorflow-gpu:latest
+    expose:
+      - '10002'
+      - '11002'
+      - '50002'
+    env_file:
+      - ../envs/push.env
+    volumes:
+      - ../conf/bootstrap.yml:/opt/pushpy/conf/push.conf.yml
+      - $PUSH_HOME:/scm/push
+      - $PUSH_APP_HOME/boot:/opt/pushpy/boot/boot.py
+    command: ["push_server", "/opt/pushpy/conf/push.conf.yml"]
+    network_mode: host
