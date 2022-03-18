@@ -7,7 +7,8 @@ import tornado.gen
 import tornado.httpserver
 import tornado.ioloop
 import tornado.web
-from pysyncobj.batteries import ReplList
+from pysyncobj import replicated
+from pysyncobj.batteries import ReplCounter, ReplList
 from tornado.routing import Router
 import mimetypes
 
@@ -70,6 +71,15 @@ def make_app(kvstore):
     return MyRouter(kvstore, tornado.web.Application())
 
 
+class MyReplCounter(ReplCounter):
+
+    @replicated
+    def inc(self):
+        p = self.get()
+        super().inc(_doApply=True)
+        print(f"inc: {p} -> {self.get()}")
+
+
 # TODO: this could be a replicated command ReplLambda / ReplCommand that runs on all hosts
 class DoRegister:
     def __init__(self, store):
@@ -82,6 +92,7 @@ class DoRegister:
 
 
 def main() -> (typing.List[object], typing.Dict[str, object]):
+    repl_counter = MyReplCounter()
     repl_code_store = ReplVersionedDict()
     tm = TaskManager(repl_code_store)
     repl_ver_store = ReplVersionedDict()
@@ -107,6 +118,7 @@ def main() -> (typing.List[object], typing.Dict[str, object]):
     repl_code_store.on_head_change = invalidate_caches
 
     boot_globals = dict()
+    boot_globals['repl_counter'] = repl_counter
     boot_globals['repl_kvstore'] = repl_kvstore
     boot_globals['repl_ver_store'] = repl_ver_store
     boot_globals['repl_code_store'] = repl_code_store

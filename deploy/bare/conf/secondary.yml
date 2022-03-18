@@ -1,0 +1,6 @@
+version: '1'
+hostname: '127.0.0.1'
+bootstrap:
+    manager_host: 127.0.0.1:50000 
+manager:
+    auth_key: 'password'
