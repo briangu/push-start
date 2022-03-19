@@ -60,7 +60,4 @@ else
     exit 1
 fi
 
-rm -rf $1/boot
-rm -rf $1/conf
-
 exit 0

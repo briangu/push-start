@@ -5,6 +5,3 @@ manager:
     auth_key: 'password'
 sync_obj:
     port: 10000
-    peers:
-        - localhost:10000
-        - localhost:10000
