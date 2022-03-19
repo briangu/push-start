@@ -1,2 +1,2 @@
-pushpy~=0.1.9
+pushpy~=0.1.10
 python-daemon

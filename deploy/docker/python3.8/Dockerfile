@@ -7,7 +7,7 @@ COPY entrypoint.sh /tmp/entrypoint.sh
 
 ADD boot /opt/pushpy/boot
 ADD conf /opt/pushpy/conf
-COPY conf/push.yml /opt/pushpy/push.conf
+COPY conf/single.yml /opt/pushpy/push.conf
 
 ADD monitor.py /opt/pushpy
 

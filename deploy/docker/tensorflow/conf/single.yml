@@ -1,7 +1,6 @@
 version: '1'
-hostname: 'localhost'
 bootstrap:
-    boot_source_uri: 'file:///opt/pushpy/boot/boot.py'
+    boot_source_uri: file:///opt/pushpy/boot/boot.py
 manager:
     auth_key: 'password'
 sync_obj:
