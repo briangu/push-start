@@ -6,10 +6,8 @@ services:
     tty: true
     image: eismcc/pushpy-start-tensorflow-gpu:latest
     expose:
-      - '10001'
-      - '11001'
-      - '50001'
-    env_file:
-      - envs/push.env
+      - '10002'
+      - '11002'
+      - '50002'
     command: ["push_server", "/opt/pushpy/conf/secondary.yml"]
     network_mode: host

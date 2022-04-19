@@ -1,3 +1,2 @@
 #!/bin/bash
-export PUSH_NODE_TYPE=bootstrap
-docker-compose -p "push" -f push-node-secondary-1.yml $*
+docker-compose -p "push" -f $1/secondary-1.yml ${@:2}

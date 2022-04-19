@@ -4,12 +4,10 @@ services:
     container_name: "push-tf-secondary-1"
     hostname: "push-tf-secondary-1"
     tty: true
-    image: eismcc/pushpy-start-tensorflow-gpu:latest
+    image: eismcc/pushpy-start-python3.8:latest
     expose:
       - '10001'
       - '11001'
       - '50001'
-    env_file:
-      - envs/push.env
     command: ["push_server", "/opt/pushpy/conf/secondary.yml"]
     network_mode: host
