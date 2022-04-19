@@ -1,10 +1,12 @@
 #!/bin/bash
 
 rm -rf $1/boot
-cp -r ../../boot $1/boot
+cp -r $PUSHPY_START_HOME/boot $1/boot
 
 rm -rf $1/conf
-cp -r ../conf $1/conf
+cp -r $PUSHPY_START_HOME/conf $1/conf
+
+cp $PUSHPY_START_HOME/deploy/monitor.py $1
 
 # build the composite requirements.txt
 $1/mkreq.sh $1

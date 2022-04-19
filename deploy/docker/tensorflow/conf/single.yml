@@ -1,7 +1,0 @@
-version: '1'
-bootstrap:
-    boot_source_uri: file:///opt/pushpy/boot/boot.py
-manager:
-    auth_key: 'password'
-sync_obj:
-    port: 10000
