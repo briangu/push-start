@@ -1,5 +1,6 @@
 from ex_push_manager import ExamplePushManager
 
+# https://stackoverflow.com/questions/52402783/pickle-class-definition-in-module-with-dill
 
 class Multiplier:
     def apply(self, a, b):
