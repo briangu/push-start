@@ -67,8 +67,9 @@ class MyRouter(Router):
         return self.app.get_handler_delegate(request, handler, target_kwargs=target_kwargs, path_args=[p])
 
 
-def make_router(kvstore):
-    return MyRouter(kvstore, tornado.web.Application())
+def make_router(code_store, template_store):
+    app = tornado.web.Application(template_loader=tornado.template.DictLoader(template_store))
+    return MyRouter(code_store, app)
 
 
 class MyReplCounter(ReplCounter):
@@ -129,4 +130,4 @@ def main() -> (typing.List[object], typing.Dict[str, object]):
 
     tm.start_event_handlers()
 
-    return boot_globals, make_router(repl_code_store)
+    return boot_globals, make_router(repl_code_store, repl_ver_store)
